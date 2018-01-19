@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.globokas.utils;
 
 import java.sql.Connection;
@@ -41,7 +36,7 @@ public class OraConnection {
             String sid = ConfigApp.getValue("ORACLE_SID");
             String user = ConfigApp.getValue("ORACLE_USER");
 //            String psw = ConfigApp.getValue("ORACLE_PSW");
-            String psw = "usrgknisoprod";
+            String psw = "%Pc1USr_GkN-1S0Pr0D%";
 
             //Producción
             String urll = "jdbc:oracle:thin:@"+ip+":"+puerto+"/"+sid;

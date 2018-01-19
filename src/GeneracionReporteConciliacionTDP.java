@@ -3,7 +3,6 @@ import com.globokas.bean.LogTransaccional;
 import com.globokas.bean.PagoTramaBean;
 import com.globokas.dao.GknIsoDao;
 import com.globokas.dao.sqlDao;
-import com.globokas.enums.EnumTerminal;
 import com.globokas.utils.ConfigApp;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -31,6 +30,7 @@ public class GeneracionReporteConciliacionTDP {
     private static final Logger logger = Logger.getLogger(GeneracionReporteConciliacionTDP.class);
     private static List<LogTransaccional> logTransaccionalList;
     private static List<PagoTramaBean> pagoTramaList;
+    private static List<String> terminalesSinComision;
     private static int numeroRegistros = 0;
     private static Double montoTotalSoles = 0.0;
     private static Double comisionSolesDb = 0.0;
@@ -64,6 +64,11 @@ public class GeneracionReporteConciliacionTDP {
 
             pagoTramaList = gknIsoDao.getPagoTrama(fechaHoy, fechaAyer);
             logTransaccionalList = sqlDao.getLogTransaccionalSQL(fechaHoy, fechaAyer);
+            terminalesSinComision = sqlDao.getTerminalesSinComision();
+            System.out.println("Agentes Sin Comision");
+            for (String com : terminalesSinComision) {
+                System.out.println(com);
+            }
 
             System.out.println("Oracle="+pagoTramaList.size());
             System.out.println("Repositorio="+logTransaccionalList.size());
@@ -186,7 +191,8 @@ public class GeneracionReporteConciliacionTDP {
         String monto = montoTotal.substring(0, 8) + "." + montoTotal.substring(8);
         montoTotalSoles += Double.parseDouble(monto);
 
-        if (EnumTerminal.obtenerPorCodigo(terminal.substring(0, 4)) == null) {//SI NO ESTA EN LA LISTA, SE LE COBRA COMISION
+        //SI NO ESTA EN LA LISTA, SE LE COBRA COMISION
+        if (!terminalesSinComision.contains(terminal.substring(0, 6))) {
             comisionSolesDb += Double.parseDouble(valorComision);
         }
 
